@@ -1,5 +1,7 @@
 @php
   $headerCategories = App\Models\Category::get();
+  $recentBlogs = App\Models\Blog::latest()->take(3)->get();
+
 @endphp
 <div class="col-lg-4 sidebar-widgets">
     <div class="widget-wrap">
@@ -29,14 +31,14 @@
       </div>
 
       <div class="single-sidebar-widget post-category-widget">
-        <h4 class="single-sidebar-widget__title">Catgory</h4>
+        <h4 class="single-sidebar-widget__title">Category</h4>
         <ul class="cat-list mt-20">
           @if(count($headerCategories)>0)
                     @foreach ($headerCategories as $category)
                     <li>
                       <a href="#" class="d-flex justify-content-between">
                         <p>{{ $category->name }}</p>
-                        <p>(03)</p>
+                        <p>({{ count($category->blogs) }})</p>
                       </a>
                     </li>
                   
@@ -51,50 +53,27 @@
       <div class="single-sidebar-widget popular-post-widget">
         <h4 class="single-sidebar-widget__title">Recent Post</h4>
         <div class="popular-post-list">
+          @if (count($recentBlogs)>0)
+          @foreach ( $recentBlogs as $recentBlog)
           <div class="single-post-list">
             <div class="thumb">
-              <img class="card-img rounded-0" src="{{asset("assets")}}/img/blog/thumb/thumb1.png" alt="">
+              <img class="card-img rounded-0" src="{{asset("storage/blogs/$recentBlog->image")}}" alt="">
               <ul class="thumb-info">
-                <li><a href="#">Adam Colinge</a></li>
-                <li><a href="#">Dec 15</a></li>
+                <li><a href="#">{{ $recentBlog->user->name }}</a></li>
+                <li><a href="#">{{ $recentBlog->created_at->format('D M') }}</a></li>
               </ul>
             </div>
             <div class="details mt-20">
               <a href="blog-single.html">
-                <h6>Accused of assaulting flight attendant miktake alaways</h6>
+                <h6>{{ $recentBlog->name }}</h6>
               </a>
             </div>
           </div>
-          <div class="single-post-list">
-            <div class="thumb">
-              <img class="card-img rounded-0" src="{{asset("assets")}}/img/blog/thumb/thumb2.png" alt="">
-              <ul class="thumb-info">
-                <li><a href="#">Adam Colinge</a></li>
-                <li><a href="#">Dec 15</a></li>
-              </ul>
-            </div>
-            <div class="details mt-20">
-              <a href="blog-single.html">
-                <h6>Tennessee outback steakhouse the
-                  worker diagnosed</h6>
-              </a>
-            </div>
-          </div>
-          <div class="single-post-list">
-            <div class="thumb">
-              <img class="card-img rounded-0" src="{{asset("assets")}}/img/blog/thumb/thumb3.png" alt="">
-              <ul class="thumb-info">
-                <li><a href="#">Adam Colinge</a></li>
-                <li><a href="#">Dec 15</a></li>
-              </ul>
-            </div>
-            <div class="details mt-20">
-              <a href="blog-single.html">
-                <h6>Tennessee outback steakhouse the
-                  worker diagnosed</h6>
-              </a>
-            </div>
-          </div>
+          @endforeach
+            
+          @endif
+
+
         </div>
       </div>
     </div>
